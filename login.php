@@ -9,10 +9,12 @@ if (isset($_SESSION['user'])){
     $query = mysql_query($select_sql, $conn);
     if(isset($query)){
         if($query=="Cliente"){
-            die('Não foi possível conectar com o banco de dados: ' . mysql_error());
+            header("Location: agenda.php");         # Cliente page
+        }else{
+            header("Location: agendamentos.php");   # Funcionarios page
         }
     }else{
-
+        die('Não foi possível conectar com o banco de dados: ' . mysql_error());
     }
 
     header("Location: login.php");
