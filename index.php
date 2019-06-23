@@ -1,3 +1,8 @@
+<?php
+    if (!isset($_SESSION)) {//Verificar se a sessão não já está aberta.
+        session_unset();
+    }
+?>
 <!DOCTYPE html>
 <html lang="br">
     <head>

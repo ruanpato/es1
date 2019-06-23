@@ -4,28 +4,16 @@ session_start();
 require_once 'dbconnect.php';
 
 // if session is set direct to login
-if (isset($_SESSION['user'])){
-    $select_sql = "SELECT tipo_usuario FROM `Usuario` WHERE cpf_usuario=?".$_SESSION['user'];
-    $query = mysql_query($select_sql, $conn);
-    if(isset($query)){
-        if($query=="Cliente"){
-            header("Location: agenda.php");         # Cliente page
-        }else{
-            header("Location: agendamentos.php");   # Funcionarios page
-        }
-    }else{
-        die('Não foi possível conectar com o banco de dados: ' . mysql_error());
-    }
+/*if (isset($_SESSION['user'])){
+    session_unset();    
+}*/
 
-    header("Location: login.php");
-    exit;
-}
 if (isset($_POST['btn-entrar'])) {
     $email = $_POST['input-email'];
     $upass = $_POST['input-senha'];
 
     $password = hash('sha256', $upass); // password hashing using SHA256
-    $stmt = $conn->prepare("SELECT email_usuario, senha_usuario FROM `Usuario` WHERE email_usuario= ?");
+    $stmt = $conn->prepare("SELECT email_usuario, senha_usuario, tipo_usuario, cpf_usuario FROM `Usuario` WHERE email_usuario= ?");
     $stmt->bind_param("s", $email);
     /* execute query */
     $stmt->execute();
@@ -37,8 +25,12 @@ if (isset($_POST['btn-entrar'])) {
 
     $count = $res->num_rows;
     if ($count == 1 && $row['senha_usuario'] == $password) {
-        $_SESSION['user'] = $row['cpf_usuario'];
-        header("Location: login.php");
+        if($row['tipo_usuario']!="Cliente"){
+            $_SESSION['user'] = $row['cpf_usuario'];
+            header("Location: agendamentos.php");
+        }else{
+
+        }
     } elseif ($count == 1) {
         $erro_email_msg = "Senha errada";
     } else $erro_email_msg = "Email não encontrado";
