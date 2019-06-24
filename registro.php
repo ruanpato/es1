@@ -30,9 +30,9 @@ function validaCPF($cpf) {
     return true;
 }
 
-if (isset($_SESSION['user']) != "") {
+/*if (isset($_SESSION['user']) != "") {
     header("Location: index.php");
-}
+}*/
 include_once 'dbconnect.php';
 
 if (isset($_POST['btn-cadastrar'])) {   // Se o botão foi selecionado
